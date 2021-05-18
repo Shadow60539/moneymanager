@@ -11,17 +11,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  PageController pageController = PageController();
-  ontap(int value) {
+  void ontap(int value) {
     setState(() {
       _currentIndex = value;
     });
-    if (pageController.hasClients) {
-      pageController.jumpToPage(_currentIndex);
-    }
   }
 
-  onpagechanged(int value) {
+  void onpagechanged(int value) {
     setState(() {
       _currentIndex = value;
     });
@@ -34,21 +30,21 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            "Money Manager",
-            style: TextStyle(color: constantColors.textcolor),
-          ),
-          backgroundColor: ConstantColors().blueaccentcolor,
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          "Money Manager",
+          style: TextStyle(color: constantColors.textcolor),
         ),
-        backgroundColor: ConstantColors().bgcolor,
-        body: PageView(
-          children: [PaymentScreen(), TransitionScreen(), StatisticsScreen()],
-          onPageChanged: (value) => onpagechanged(value),
-        ),
-        
-        bottomNavigationBar: bottomAppBar(_currentIndex, ontap));
+        backgroundColor: ConstantColors().blueaccentcolor,
+      ),
+      backgroundColor: ConstantColors().bgcolor,
+      body: IndexedStack(
+        children: [PaymentScreen(), TransitionScreen(), StatisticsScreen()],
+        index: _currentIndex,
+      ),
+      bottomNavigationBar: bottomAppBar(_currentIndex, ontap),
+    );
   }
 }

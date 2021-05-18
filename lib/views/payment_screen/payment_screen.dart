@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:moneymanager/animations/popup_card/custom_rect_tween.dart';
 import 'package:moneymanager/animations/popup_card/hero_dialoge_route.dart';
 import 'package:moneymanager/animations/popup_card/popup_card_ui.dart';
 import 'package:moneymanager/constants/constants.dart';
 import 'package:moneymanager/models/category_Model.dart';
 import 'package:moneymanager/views/payment_screen/payment_screen_widgets.dart';
+
+import '../../models/category_Model.dart';
 
 class PaymentScreen extends StatelessWidget {
   final ConstantColors constantColors = ConstantColors();
@@ -34,13 +37,20 @@ class PaymentScreen extends StatelessWidget {
 
 Widget _buildListView(context) {
   final categorydata = Hive.box("category");
-  return ListView.builder(
-    itemCount: categorydata.length,
-    itemBuilder: (context, index) {
-      final CategoryModel categorymodel = categorydata.getAt(index);
-      return GestureDetector(onLongPress: ()=>deleteDialogue(context,categorydata,index),
-              child: categoryBox(
-            context, categorymodel.categoryName, categorymodel.totalAmount),
+
+  return WatchBoxBuilder(
+    box: categorydata,
+    builder: (context, box) {
+      return ListView.builder(
+        itemCount: categorydata.length,
+        itemBuilder: (context, index) {
+          final CategoryModel categorymodel = categorydata.getAt(index);
+          return GestureDetector(
+            onLongPress: () => deleteDialogue(context, categorydata, index),
+            child: categoryBox(
+                context, categorymodel.categoryName, categorymodel.totalAmount),
+          );
+        },
       );
     },
   );
